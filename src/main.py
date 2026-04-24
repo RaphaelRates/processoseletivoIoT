@@ -101,6 +101,8 @@ while True:
     r, g, b = definir_cor(u, p, t)
     set_color(r, g, b)
 
+    print("                Leitura do Solo             ")
+    print("-" * 40)
     print(f"Umidade: {u:.1f}%")
     print(f"pH: {p:.1f}")
     print(f"Temperatura: {t:.1f}C")
