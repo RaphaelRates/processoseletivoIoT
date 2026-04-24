@@ -2,6 +2,68 @@
   "version": 1,
   "author": "Uri Shaked",
   "editor": "wokwi",
-  "parts": [ { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} } ],
-  "connections": [ [ "esp:TX", "$serialMonitor:RX", "", [] ], [ "esp:RX", "$serialMonitor:TX", "", [] ] ]
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": -124.8,
+      "left": -62.36,
+      "attrs": { "env": "micropython-20231005-v1.21.0" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -193.3, "left": -240.2, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot2", "top": -49.3, "left": -384.2, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -24.55,
+      "left": 75.4,
+      "rotate": 180,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": -14.95,
+      "left": 75.4,
+      "rotate": 180,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 13.55,
+      "left": 76.8,
+      "rotate": 180,
+      "attrs": { "value": "1000" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot3", "top": 104.3, "left": -240.2, "attrs": {} },
+    {
+      "type": "wokwi-rgb-led",
+      "id": "rgb1",
+      "top": -149.6,
+      "left": 173.9,
+      "attrs": { "common": "cathode" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "pot2:VCC", "esp:3V3", "cyan", [ "v-9.6", "h143.2", "v-105.6" ] ],
+    [ "pot1:VCC", "esp:3V3", "cyan", [ "v28.8", "h133.45" ] ],
+    [ "pot2:GND", "esp:GND.3", "black", [ "v9.6", "h67.2", "v-67.2" ] ],
+    [ "pot1:GND", "esp:GND.3", "black", [ "v48", "v38.4" ] ],
+    [ "pot1:SIG", "esp:14", "gold", [ "v38.4", "h-0.4", "v96" ] ],
+    [ "pot2:SIG", "esp:12", "gold", [ "h76.4", "v-86.4" ] ],
+    [ "pot3:VCC", "esp:3V3", "cyan", [ "v-9.6", "h37.6", "v-259.2" ] ],
+    [ "pot3:SIG", "esp:13", "gold", [ "v9.6", "h76.4", "v-144" ] ],
+    [ "r1:2", "esp:18", "red", [ "v0" ] ],
+    [ "r3:2", "esp:4", "blue", [ "v0" ] ],
+    [ "r2:2", "esp:5", "green", [ "v0" ] ],
+    [ "r1:1", "rgb1:R", "red", [ "v0" ] ],
+    [ "r2:1", "rgb1:G", "green", [ "h67.2", "v-96" ] ],
+    [ "r3:1", "rgb1:B", "blue", [ "h75.4", "v-124.5" ] ],
+    [ "rgb1:COM", "esp:GND.2", "black", [ "v0" ] ],
+    [ "pot3:GND", "esp:GND.3", "black", [ "h76.8", "v-211.2" ] ]
+  ],
+  "dependencies": {}
 }

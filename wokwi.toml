@@ -2,3 +2,18 @@
 version = 1
 firmware = "flasher_args.json"
 rfc2217ServerPort = 4000
+
+[board]
+type = "esp32-devkit-v1"
+
+[firmware]
+type = "micropython"
+version = "v1.22.2"
+
+[script]
+path = "src/main.py"
+
+[dependencies]
+machine = "builtin"
+dht = "builtin"
+time = "builtin"
