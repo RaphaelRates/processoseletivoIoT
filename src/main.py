@@ -1,6 +1,8 @@
 from machine import Pin, ADC, PWM
 import time
 
+print("Teste")
+
 UMIDADE_MIN = 40
 UMIDADE_MAX = 70
 PH_MIN = 6.0
