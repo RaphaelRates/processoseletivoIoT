@@ -240,75 +240,132 @@ Preencha todas as seções abaixo de forma **clara, objetiva e técnica**.
 > Não é necessário um relatório extenso.  
 > O principal critério é demonstrar **clareza nas decisões técnicas**, organização e entendimento do sistema embarcado desenvolvido.
 
----
+------
 
 ### 👤 Identificação do Candidato
 
-- **Nome completo:**  
-- **GitHub:**  
+- **Nome completo: Raphael Sousa Rabelo Rates**  
 
 ---
 
 ## 1️⃣ Visão Geral da Solução
 
-Descreva, em poucas palavras:
-
-- Qual é o objetivo do seu projeto  
-- O que o sistema embarcado simulado faz  
-- Como o usuário interage com ele (se aplicável)
+O projeto consiste em um **sistema embarcado de monitoramento de solo** que mede três parâmetros fundamentais para o plantio: **umidade**, **pH** e **temperatura**. O sistema simula a leitura destes sensores via potenciômetros (no Wokwi) e fornece feedback visual através de um **LED RGB**, além de exibir no console o status do solo e recomendações de correção. O usuário interage observando as cores do LED e as mensagens no terminal serial.
 
 ---
 
 ## 2️⃣ Arquitetura do Sistema Embarcado
 
-Explique a arquitetura lógica do seu projeto, abordando:
+### Fluxo principal do programa:
+1. **Inicialização** – Configuração dos pinos, PWM para o LED e ADCs para os sensores.
+2. **Loop infinito** – Leitura contínua dos três sensores a cada 0,5 segundos.
+3. **Processamento** – Verificação se os valores estão dentro das faixas ideais.
+4. **Saída** – Atualização da cor do LED e exibição dos resultados no console.
 
-- Fluxo principal do programa (`main.py`)  
-- Estrutura de estados, loops ou temporizações  
-- Como os componentes interagem entre si  
+### Estrutura do código:
+- **Funções de leitura** (`ler_umidade`, `ler_ph`, `ler_temperatura`) – Convertem valores do ADC (0-4095) para escalas reais.
+- **Função de controle do LED** (`set_color`) – Define intensidade PWM para cada canal RGB.
+- **Função de lógica condicional** (`definir_cor`) – Mapeia parâmetros para cores específicas.
+- **Funções de interface** (`gerar_status`, `gerar_recomendacao`) – Geram mensagens descritivas.
+- **Loop principal** – Executa leituras, processa e atualiza saídas com temporização fixa.
 
-Se desejar, utilize tópicos ou um pequeno diagrama em texto.
+### Interação entre componentes:
+```
+Sensor Umidade (ADC) → Leitura (%) → Lógica de decisão → LED RGB (PWM)
+Sensor pH (ADC)      → Leitura (pH) → Lógica de decisão → Console Serial
+Sensor Temp (ADC)    → Leitura (°C)  → Lógica de decisão → Mensagens
+```
 
 ---
 
 ## 3️⃣ Componentes Utilizados na Simulação
 
-Liste os principais componentes definidos no `diagram.json`, por exemplo:
-
-- Tipo de placa utilizada  
-- LEDs, botões, sensores, atuadores, etc.  
-- Função de cada componente no sistema  
+| Componente | Pino | Função |
+|------------|------|--------|
+| **Placa** | ESP32 | Microcontrolador principal |
+| **Potenciômetro Umidade** | GPIO 14 (ADC) | Simula sensor de umidade (0-100%) |
+| **Potenciômetro pH** | GPIO 12 (ADC) | Simula sensor de pH (0-14) |
+| **Potenciômetro Temperatura** | GPIO 13 (ADC) | Simula sensor de temperatura (0-100°C) |
+| **LED RGB (Vermelho)** | GPIO 18 (PWM) | Indica solo seco ou problemas críticos |
+| **LED RGB (Verde)** | GPIO 5 (PWM) | Indica solo perfeito |
+| **LED RGB (Azul)** | GPIO 4 (PWM) | Indica pH ácido ou temperatura baixa |
 
 ---
 
 ## 4️⃣ Decisões Técnicas Relevantes
 
-Explique brevemente decisões importantes tomadas durante o desenvolvimento, como:
+### Organização do código:
+- **Modularização por funções** – Cada responsabilidade isolada (leitura, lógica, saída).
+- **Constantes no início** – Limites dos parâmetros centralizados para fácil ajuste.
+- **Nomes descritivos** – Funções autoexplicativas (`definir_cor`, `gerar_recomendacao`).
 
-- Organização do código  
-- Uso de funções, estados ou constantes  
-- Estratégias para temporização ou controle lógico  
+### Lógica de cores (prioridades):
+O sistema adota **prioridade de alertas** na seguinte ordem:
+1. Umidade (seca ou encharcada) – **Vermelho** ou **Roxo**
+2. pH (ácido ou alcalino) – **Azul** ou **Verde claro**
+3. Temperatura (baixa ou alta) – **Ciano** ou **Laranja**
+4. Tudo OK – **Verde**
+
+### Temporização:
+- **Delay fixo de 0,5s** no loop principal – Atualizações periódicas e estáveis.
+- Sem uso de timers ou interrupções – Projeto simplificado para simulação.
+
+### PWM:
+- **Frequência de 1 kHz** – Adequada para LED RGB.
+- **Resolução de 10 bits (0-1023)** – Controle suave de intensidade.
+- **Mapeamento 0-100% → 0-1023** – Facilita a lógica de cores.
 
 ---
 
 ## 5️⃣ Resultados Obtidos
 
-Descreva o comportamento final do sistema:
+### Comportamento final do sistema:
 
-- O que funciona corretamente  
-- Quais requisitos foram atendidos  
-- Resultado observado na simulação do Wokwi  
+| Condição | LED | Status | Recomendação |
+|----------|-----|--------|---------------|
+| Tudo dentro dos limites | 🟢 Verde | SOLO PERFEITO | OK |
+| Umidade < 40% | 🔴 Vermelho | Solo seco | Regar |
+| Umidade > 70% | 🟣 Roxo | Solo encharcado | Drenar |
+| pH < 6,0 | 🔵 Azul | pH ácido | Calcário |
+| pH > 7,5 | 🟢 Verde claro | pH alcalino | Enxofre |
+| Temperatura < 20°C | 🔷 Ciano | Temp baixa | Aquecer |
+| Temperatura > 30°C | 🟠 Laranja | Temp alta | Resfriar |
+
+### Requisitos atendidos:
+- ✅ Leitura de 3 sensores analógicos via ADC
+- ✅ Controle de LED RGB com PWM
+- ✅ Exibição contínua de dados no console
+- ✅ Geração de status e recomendações textuais
+- ✅ Feedback visual por cores para diagnóstico rápido
+
+### Resultado na simulação Wokwi:
+O sistema executa em loop infinito, respondendo em tempo real às variações dos potenciômetros, alterando a cor do LED e atualizando as mensagens a cada 0,5 segundo.
 
 ---
 
-## 6️⃣ Comentários Adicionais (Opcional)
+## 6️⃣ Comentários Adicionais
 
-Utilize este espaço para comentar, se desejar:
+### Dificuldades encontradas:
+- Ajustar as escalas dos ADCs para representar corretamente as grandezas físicas (umidade 0-100%, pH 0-14, temperatura 0-100°C).
+- Definir a ordem de prioridade das cores para que alertas mais críticos (ex: solo seco) sobressaiam sobre outros (ex: temperatura levemente alta).
 
-- Dificuldades encontradas  
-- Limitações da solução  
-- Melhorias que você faria com mais tempo  
-- Principais aprendizados durante o desafio  
+### Limitações da solução:
+- Simulação com potenciômetros não representa sensores reais (higrômetro, sonda de pH, termistor).
+- Sem histerese – Pequenas oscilações podem causar mudanças rápidas de cor.
+- Sem botão ou interface adicional – Apenas monitoramento passivo.
+
+### Melhorias com mais tempo:
+- Implementar médias móveis para suavizar leituras ruidosas.
+- Adicionar botão para alternar entre modo automático e leitura única.
+- Incluir display LCD/I2C para exibir dados sem necessidade de computador.
+- Implementar calibração dos sensores via software.
+
+### Principais aprendizados:
+- Uso de PWM para controle de intensidade de LEDs.
+- Conversão ADC → grandezas físicas reais.
+- Lógica condicional com múltiplas prioridades.
+- Organização de código embarcado em MicroPython.
+- Importância de feedback visual claro para usuários finais.
 
 ---
 
