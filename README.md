@@ -244,7 +244,8 @@ Preencha todas as seções abaixo de forma **clara, objetiva e técnica**.
 
 ### 👤 Identificação do Candidato
 
-- **Nome completo: Raphael Sousa Rabelo Rates**  
+- **Nome completo: Raphael Sousa Rabelo Rates**
+- **GitHub**:  https://github.com/RaphaelRates/
 
 ---
 
