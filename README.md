@@ -370,11 +370,6 @@ O sistema executa em loop infinito, respondendo em tempo real às variações do
 
 ---
 
-> ✅ Este relatório faz parte da avaliação técnica.  
-> Clareza, objetividade e organização são tão importantes quanto o funcionamento do código.
-
----
-
 ## 🆘 Suporte
 
 Em caso de dúvidas:
